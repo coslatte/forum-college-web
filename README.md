@@ -13,27 +13,38 @@ This project is a simple client-server web application for managing comments. It
 ### Backend (Laravel)
 
 1. Navigate to the `backend` folder:
+
    ```sh
    cd backend
    ```
+
 2. Install PHP dependencies:
+
    ```sh
    composer install
    ```
+
 3. Copy the example environment file and configure your environment:
+
    ```sh
    cp .env.example .env
    # Edit .env as needed (DB_CONNECTION, etc.)
    ```
+
 4. Generate the application key:
+
    ```sh
    php artisan key:generate
    ```
+
 5. Run migrations and seeders:
+
    ```sh
    php artisan migrate --seed
    ```
+
 6. Start the development server:
+
    ```sh
    php artisan serve
    ```
@@ -41,14 +52,19 @@ This project is a simple client-server web application for managing comments. It
 ### Frontend (Vite + React)
 
 1. Navigate to the `frontend` folder:
+
    ```sh
    cd frontend
    ```
+
 2. Install Node.js dependencies:
+
    ```sh
    npm install
    ```
+
 3. Start the development server:
+
    ```sh
    npm run dev
    ```
