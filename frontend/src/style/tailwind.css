@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.comment-bg-100 {
+  @apply bg-gradient-to-br from-orange-100 via-teal-100 to-orange-100;
+  animation: gradient 5s ease infinite;
+  background-size: 200% 200%;
+}
+
+.comment-bg-200 {
+  @apply bg-gradient-to-l from-teal-200 via-orange-100 to-teal-200;
+  animation: gradient 30s ease infinite;
+  background-size: 300% 300%;
+}
+
+.comment-bg-300 {
+  @apply bg-gradient-to-l from-teal-50 to-orange-50;
+  animation: gradient 28s ease infinite;
+  background-size: 100% 100%;
+}
+
+.comment-text {
+  @apply sm:text-sm sm:text-shadow-sm text-shadow-md lg:text-lg text-teal-950 lg:text-shadow-lg text-shadow-orange-950/20;
+}
+
+.comment-text-special {
+  @apply sm:text-sm font-bold italic sm:text-shadow-sm text-shadow-md md:text-2xl lg:text-lg text-teal-950 lg:text-shadow-lg text-shadow-orange-950/20;
+}
