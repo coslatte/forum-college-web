@@ -18,7 +18,8 @@ class CommentController extends Controller
   {
     $validated = $request->validate([
       'user' => 'required|string|max:255',
-      'content' => 'required|string|max:255',
+      'content' => 'required|string|max:1024',
+      'likes' => 'required|integer',
     ]);
     $comment = Comment::create($validated);
     return response()->json($comment, 201);

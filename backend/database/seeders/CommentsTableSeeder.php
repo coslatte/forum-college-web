@@ -16,18 +16,21 @@ class CommentsTableSeeder extends Seeder
       [
         'user' => 'Juan',
         'content' => '¡Excelente artículo!',
+        'likes' => 10,
         'created_at' => now(),
         'updated_at' => now(),
       ],
       [
         'user' => 'Ana',
         'content' => 'Gracias por la información.',
+        'likes' => 12,
         'created_at' => now(),
         'updated_at' => now(),
       ],
       [
         'user' => 'Carlos',
         'content' => 'Tengo una duda sobre el tema.',
+        'likes' => 2,
         'created_at' => now(),
         'updated_at' => now(),
       ],
