@@ -32,17 +32,19 @@ const CommentList: React.FC = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div>
+    <div className="space-y-4">
       {comments.length === 0 ? (
-        <div>No comments yet.</div>
+        <div className="text-center py-2">No comments yet.</div>
       ) : (
-        comments.map((comment) => (
-          <Comment
-            key={comment.id}
-            user={comment.user}
-            content={comment.content}
-          />
-        ))
+        <div className="space-y-4">
+          {comments.map((comment) => (
+            <Comment
+              key={comment.id}
+              user={comment.user}
+              content={comment.content}
+            />
+          ))}
+        </div>
       )}
     </div>
   );
