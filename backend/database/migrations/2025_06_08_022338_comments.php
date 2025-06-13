@@ -11,9 +11,12 @@ return new class extends Migration
     {
         Schema::create("comments", function (Blueprint $table) {
             $table->increments("id");
-            $table->string("user", 255);
             $table->string("content", 1024);
-            $table->integer("likes");
+            $table->unsignedInteger("upvotes")->default(0);
+            $table->unsignedInteger("downvotes")->default(0);
+            $table->unsignedInteger('users_id');
+            $table->foreign('users_id')->references('id')->on('users1')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

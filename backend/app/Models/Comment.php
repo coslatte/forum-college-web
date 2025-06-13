@@ -12,9 +12,10 @@ class Comment extends Model
   protected $table = 'comments';
 
   protected $fillable = [
-    'user',
     'content',
-    'likes',
+    'upvotes',
+    'downvotes',
+    'users_id',
   ];
 
   
@@ -27,4 +28,10 @@ class Comment extends Model
   {
     return $this->created_at ? $this->created_at->format($format) : null;
   }
+
+  public function user()
+  {
+    return $this->belongsTo(Users::class, 'users_id');
+  }
+
 }
