@@ -28,13 +28,13 @@ const CommentList: React.FC = () => {
       });
   }, []);
 
-  if (loading) return <div>Loading comments...</div>;
+  if (loading) return <div>Cargando comentarios...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <div className="space-y-4">
       {comments.length === 0 ? (
-        <div className="text-center py-2">No comments yet.</div>
+        <div className="text-center py-2">Sin comentarios aún.</div>
       ) : (
         <div className="space-y-4">
           {comments.map((comment) => (
@@ -42,6 +42,8 @@ const CommentList: React.FC = () => {
               key={comment.id}
               user={comment.user}
               content={comment.content}
+              upvotes={20}
+              downvotes={500}
             />
           ))}
         </div>
