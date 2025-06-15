@@ -1,52 +1,54 @@
-import { useState } from "react";
 import {
   BiUpvote,
   BiSolidUpvote,
   BiSolidDownvote,
   BiDownvote,
 } from "react-icons/bi";
+import { MdCancel } from "react-icons/md";
 
-type voteType = {
+type VoteButtonType = {
   voteType: "upvote" | "downvote";
   size: number;
+  isVoted: boolean;
+  onVote: () => void;
 };
 
-const VoteButton: React.FC<voteType> = ({ voteType, size }) => {
-  const [voted, setVoted] = useState(false);
-
+const VoteButton: React.FC<VoteButtonType> = ({
+  voteType,
+  size,
+  isVoted,
+  onVote,
+}) => {
   const handleVote = () => {
-    setVoted(!voted);
+    onVote();
   };
 
   return (
     <div className="flex items-center justify-start space-x-4">
-      {voteType === "upvote" ? (
-        // UPVOTE
-        voted ? (
-          <button onClick={handleVote}>
-            <BiUpvote size={size} />
-          </button>
+      <button
+        className="transition-colors ease-in-out duration-100 hover:bg-teal-200 rounded-lg"
+        onClick={handleVote}
+      >
+        {voteType === "upvote" ? (
+          <>
+            {isVoted ? <BiSolidUpvote size={size} /> : <BiUpvote size={size} />}
+          </>
+        ) : voteType === "downvote" ? (
+          <>
+            {isVoted ? (
+              <BiSolidDownvote size={size} />
+            ) : (
+              <BiDownvote size={size} />
+            )}
+          </>
         ) : (
-          <button onClick={handleVote}>
-            <BiSolidUpvote size={size} />
-          </button>
-        )
-      ) : voteType === "downvote" ? (
-        // DOWNVOTE
-        voted ? (
-          <button onClick={handleVote}>
-            <BiDownvote size={size} />
-          </button>
-        ) : (
-          <button onClick={handleVote}>
-            <BiSolidDownvote size={size} />
-          </button>
-        )
-      ) : (
-        <>
-          <div className="size-20 bg-red-500 rounded-full"></div>
-        </>
-      )}
+          <>
+            <div className="bg-red-500 rounded-lg">
+              <MdCancel size={size} />
+            </div>
+          </>
+        )}
+      </button>
     </div>
   );
 };

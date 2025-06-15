@@ -5,9 +5,12 @@ import api from "../api/api";
 export type CommentType = {
   id: number;
   user: string;
+  profilePicture: string;
   content: string;
-  created_at?: string;
-  updated_at?: string;
+  upvotes: number;
+  downvotes: number;
+  created_at: string;
+  updated_at: string;
 };
 
 const CommentList: React.FC = () => {
@@ -28,6 +31,27 @@ const CommentList: React.FC = () => {
       });
   }, []);
 
+  const handleVoteChange = (
+    commentId: number,
+    voteType: "upvote" | "downvote"
+  ) => {
+    setComments((prevComments) =>
+      prevComments.map((comment) =>
+        comment.id === commentId
+          ? {
+              ...comment,
+              upvotes:
+                voteType === "upvote" ? comment.upvotes + 1 : comment.upvotes,
+              downvotes:
+                voteType === "downvote"
+                  ? comment.downvotes + 1
+                  : comment.downvotes,
+            }
+          : comment
+      )
+    );
+  };
+
   if (loading) return <div>Cargando comentarios...</div>;
   if (error) return <div>{error}</div>;
 
@@ -40,10 +64,8 @@ const CommentList: React.FC = () => {
           {comments.map((comment) => (
             <Comment
               key={comment.id}
-              user={comment.user}
-              content={comment.content}
-              upvotes={20}
-              downvotes={500}
+              {...comment}
+              onVoteChange={handleVoteChange}
             />
           ))}
         </div>

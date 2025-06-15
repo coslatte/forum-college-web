@@ -7,4 +7,16 @@ const api = axios.create({
   },
 });
 
+export const voteComment = async (
+  commentId: number,
+  voteType: "upvote" | "downvote"
+) => {
+  await api.post(`/comments/${commentId}/vote`, { voteType });
+};
+
+export const getCommentVotes = async (commentId: number) => {
+  const response = await api.get(`/comments/${commentId}/votes`);
+  return response.data;
+};
+
 export default api;

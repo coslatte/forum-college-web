@@ -3,7 +3,7 @@ import { Page } from "./Page";
 function App() {
   return (
     <>
-      <Page/>
+      <Page />
     </>
   );
 }
