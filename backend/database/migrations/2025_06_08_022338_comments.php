@@ -14,8 +14,8 @@ return new class extends Migration
             $table->string("content", 1024);
             $table->unsignedInteger("upvotes")->default(0);
             $table->unsignedInteger("downvotes")->default(0);
-            $table->unsignedInteger('users_id');
-            $table->foreign('users_id')->references('id')->on('users1')->onDelete('cascade');
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
 
             $table->timestamps();
         });

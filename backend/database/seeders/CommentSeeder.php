@@ -5,32 +5,34 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class CommentsTableSeeder extends Seeder
+class CommentSeeder extends Seeder
 {
-  /**
-   * Run the database seeds.
-   */
   public function run(): void
   {
+    $users = DB::table('user')->pluck('id', 'username');
+
     DB::table('comments')->insert([
       [
-        'user' => 'Juan',
+        'user_id' => $users['Juan'] ?? null,
         'content' => '¡Excelente artículo!',
-        'likes' => 10,
+        'upvotes' => 10,
+        'downvotes' => 0,
         'created_at' => now(),
         'updated_at' => now(),
       ],
       [
-        'user' => 'Ana',
+        'user_id' => $users['Ana'] ?? null,
         'content' => 'Gracias por la información.',
-        'likes' => 12,
+        'upvotes' => 12,
+        'downvotes' => 0,
         'created_at' => now(),
         'updated_at' => now(),
       ],
       [
-        'user' => 'Carlos',
+        'user_id' => $users['Carlos'] ?? null,
         'content' => 'Tengo una duda sobre el tema.',
-        'likes' => 2,
+        'upvotes' => 2,
+        'downvotes' => 0,
         'created_at' => now(),
         'updated_at' => now(),
       ],
