@@ -12,13 +12,15 @@ const CommentList: React.FC = () => {
     api
       .get<CommentType[]>("/comments")
       .then((response) => {
-        console.log('API Response:', response.data);
+        console.log("API Response:", response.data);
         setComments(response.data);
         setLoading(false);
       })
       .catch((error) => {
-        console.error('Error fetching comments:', error);
-        setError(error.response?.data || error.message || "Error loading comments");
+        console.error("Error fetching comments:", error);
+        setError(
+          error.response?.data || error.message || "Error loading comments"
+        );
         setLoading(false);
       });
   }, []);
@@ -62,7 +64,8 @@ const CommentList: React.FC = () => {
                   id={comment.id}
                   forum_user={{
                     id: comment.forum_user?.id || 0,
-                    username: comment.forum_user?.username || "Usuario desconocido",
+                    username:
+                      comment.forum_user?.username || "Usuario desconocido",
                     profile_pic: comment.forum_user?.profile_pic || null,
                   }}
                   content={comment.content}

@@ -10,6 +10,7 @@ Route::get("/forum_users", [ForumUsersController::class, "index"]);
 Route::get("/forum_users/{id}", [ForumUsersController::class, "show"]);
 
 Route::post('/comments', [CommentController::class, 'store']);
+Route::post('/comments/{id}/vote', [CommentController::class, 'vote']);
 
 Route::put('/comments/{id}', [CommentController::class, 'update']);
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import VoteButton from "./buttons/VoteButton";
 import { voteComment } from "../services/api";
+import VoteButton from "./buttons/VoteButton";
 
 interface CommentProps {
   id: number;
@@ -14,7 +14,12 @@ interface CommentProps {
   downvotes: number;
   created_at: string;
   updated_at: string;
-  onVoteChange: (commentId: number, voteType: "upvote" | "downvote") => void;
+  onVoteChange: (
+    commentId: number,
+    voteType: "upvote" | "downvote",
+    upvotes: number,
+    downvotes: number
+  ) => void;
 }
 
 const Comment: React.FC<CommentProps> = ({
@@ -25,73 +30,39 @@ const Comment: React.FC<CommentProps> = ({
   downvotes,
   onVoteChange,
 }) => {
-  const [upvotesState, setUpvotes] = useState(upvotes);
-  const [downvotesState, setDownvotes] = useState(downvotes);
+  const [upvotesState, setUpvotes] = useState<number>(upvotes);
+  const [downvotesState, setDownvotes] = useState<number>(downvotes);
   const [isUpvoted, setUpvoted] = useState(false);
   const [isDownvoted, setDownvoted] = useState(false);
 
   const handleVote = async (voteType: "upvote" | "downvote") => {
     try {
-      // Esto regula que no se accionen simultáneamente upvote y downvote
-      if (voteType === "upvote" && isDownvoted) {
-        setDownvotes(downvotesState - 1);
-        setDownvoted(false);
-      } else if (voteType === "downvote" && isUpvoted) {
-        setUpvotes(upvotesState - 1);
-        setUpvoted(false);
-      }
+      const removing = (isUpvoted && voteType === "upvote") || (isDownvoted && voteType === "downvote");
+      const delta = removing ? -1 : 1;
 
-      // Manejar votos
-      if (voteType === "upvote" ? isUpvoted : isDownvoted) {
-        // Quitar voto
-        if (voteType === "upvote") {
-          setUpvotes(upvotesState - 1);
-          setUpvoted(false);
-        } else {
-          setDownvotes(downvotesState - 1);
-          setDownvoted(false);
-        }
-      } else {
-        // Dar voto
-        if (voteType === "upvote") {
-          setUpvotes(upvotesState + 1);
-          setUpvoted(true);
-        } else {
-          setDownvotes(downvotesState + 1);
-          setDownvoted(true);
-        }
-      }
-
-      // Llamada a la API y callback
-      await voteComment(id, voteType);
-      onVoteChange(id, voteType);
-    } catch {
-      // Revertir cambios en caso de error
+      // Actualiza optimistamente el estado local
       if (voteType === "upvote") {
-        if (!isUpvoted) {
-          setUpvotes(upvotesState - 1);
-          setUpvoted(false);
-        } else {
-          setUpvotes(upvotesState + 1);
-          setUpvoted(true);
+        setUpvoted(!isUpvoted);
+        setUpvotes(upvotesState + delta);
+        if (!removing) {
+          setDownvoted(false);
         }
       } else {
-        if (!isDownvoted) {
-          setDownvotes(downvotesState - 1);
-          setDownvoted(false);
-        } else {
-          setDownvotes(downvotesState + 1);
-          setDownvoted(true);
+        setDownvoted(!isDownvoted);
+        setDownvotes(downvotesState + delta);
+        if (!removing) {
+          setUpvoted(false);
         }
       }
-      // Restaurar voto opuesto si estaba activo
-      if (voteType === "upvote" && isDownvoted) {
-        setDownvotes(downvotesState + 1);
-        setDownvoted(true);
-      } else if (voteType === "downvote" && isUpvoted) {
-        setUpvotes(upvotesState + 1);
-        setUpvoted(true);
-      }
+
+      // Llama a la API y actualiza el estado con la respuesta real
+      const updated = await voteComment(id, voteType, delta);
+      setUpvotes(updated.upvotes);
+      setDownvotes(updated.downvotes);
+
+      onVoteChange(id, voteType, updated.upvotes, updated.downvotes);
+    } catch (error) {
+      console.log(error);
     }
   };
 

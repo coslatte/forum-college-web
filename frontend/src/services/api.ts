@@ -9,9 +9,11 @@ const api = axios.create({
 
 export const voteComment = async (
   commentId: number,
-  voteType: "upvote" | "downvote"
+  voteType: "upvote" | "downvote",
+  delta: -1 | 1
 ) => {
-  await api.post(`/comments/${commentId}/vote`, { voteType });
+  const response = await api.post(`/comments/${commentId}/vote`, { voteType, delta });
+  return response.data; // devuelve el comentario actualizado
 };
 
 export const getCommentVotes = async (commentId: number) => {
