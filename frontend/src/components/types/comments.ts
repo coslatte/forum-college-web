@@ -1,6 +1,6 @@
 export type CommentType = {
   id: number;
-  user: string;
+  username: string;
   profilePicture: string | null;
   content: string;
   upvotes: number;

@@ -4,7 +4,7 @@ import api from "../services/api";
 
 export type CommentType = {
   id: number;
-  user: string;
+  username: string;
   profilePicture: string;
   content: string;
   upvotes: number;
@@ -63,8 +63,15 @@ const CommentList: React.FC = () => {
         <div className="space-y-4">
           {comments.map((comment) => (
             <Comment
+              id={comment.id}
               key={comment.id}
-              {...comment}
+              username={comment.username}
+              profilePicture={comment.profilePicture}
+              content={comment.content}
+              upvotes={comment.upvotes}
+              downvotes={comment.downvotes}
+              created_at={comment.created_at}
+              updated_at={comment.updated_at}
               onVoteChange={handleVoteChange}
             />
           ))}

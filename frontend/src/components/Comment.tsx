@@ -10,7 +10,7 @@ interface CommentProps extends CommentType {
 
 const Comment: React.FC<CommentProps> = ({
   id,
-  user,
+  username,
   profilePicture,
   content,
   upvotes,
@@ -100,15 +100,15 @@ const Comment: React.FC<CommentProps> = ({
         {profilePicture ? (
           <img
             src={profilePicture}
-            alt={`${user}'s profile`}
+            alt={`${username}'s profile`}
             className="w-8 h-8 rounded-full"
           />
         ) : (
           <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
-            <span className="text-gray-600">{user?.[0]}</span>
+            <span className="text-gray-600">{username?.[0]}</span>
           </div>
         )}
-        <span className="comment-text-special">{user}</span>
+        <span className="comment-text-special">{username}</span>
       </div>
 
       {/* CONTENT */}
