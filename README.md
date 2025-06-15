@@ -1,85 +1,91 @@
-# Comments Section - Client/Server Project
+# Forum College - University Comments System
 
-This project is a simple client-server web application for managing comments. It consists of a backend built with Laravel (PHP) and a frontend built with Vite + React (TypeScript).
+College project showcasing modern frontend and backend integration for university comments management.
 
-## Features
+## Key Features
 
-- RESTful API for comments (list, create)
-- Example database seeder for comments
-- Frontend ready to consume the API using Axios
+- Interface with React and Tailwind CSS
+- RESTful API with Laravel
+- User and comment management
+- Voting system (upvotes/downvotes)
+
+## Technologies
+
+- **Frontend**: React + TypeScript + Vite + Tailwind CSS
+- **Backend**: Laravel
+- **Database**: MySQL
 
 ## Installation
 
 ### Backend (Laravel)
 
-1. Navigate to the `backend` folder:
+1. Navigate to the backend directory:
 
-   ```sh
-   cd backend
-   ```
+```bash
+cd backend
+```
 
-2. Install PHP dependencies:
+2. Install dependencies:
 
-   ```sh
-   composer install
-   ```
+```bash
+composer install
+```
 
-3. Copy the example environment file and configure your environment:
+3. Configure the environment:
 
-   ```sh
-   cp .env.example .env
-   # Edit .env as needed (DB_CONNECTION, etc.)
-   ```
+```bash
+cp .env.example .env
+# Configure database in .env
+php artisan key:generate
+```
 
-4. Generate the application key:
+4. Run migrations and seeders:
 
-   ```sh
-   php artisan key:generate
-   ```
+```bash
+php artisan migrate --seed
+```
 
-5. Run migrations and seeders:
+5. Start the server:
 
-   ```sh
-   php artisan migrate --seed
-   ```
+```bash
+php artisan serve
+```
 
-6. Start the development server:
+### Frontend (React)
 
-   ```sh
-   php artisan serve
-   ```
+1. Navigate to the frontend directory:
 
-### Frontend (Vite + React)
+```bash
+cd frontend
+```
 
-1. Navigate to the `frontend` folder:
+2. Install dependencies:
 
-   ```sh
-   cd frontend
-   ```
-
-2. Install Node.js dependencies:
-
-   ```sh
-   npm install
-   ```
+```bash
+npm install
+```
 
 3. Start the development server:
 
-   ```sh
-   npm run dev
-   ```
-
-## Usage
-
-- The backend API will be available at `http://localhost:8000/api/comments`.
-- The frontend will be available at the port shown in the terminal (usually `http://localhost:5173`).
-- Make sure to configure CORS if accessing the API from a different origin.
+```bash
+npm run dev
+```
 
 ## Project Structure
 
-- `backend/` - Laravel API and database
-- `frontend/` - React client
+```
+seccion_comentarios/
+├── backend/         # Laravel REST API
+│   ├── app/         # Models, controllers and routes
+│   └── database/    # Migrations and seeders
+│
+└── frontend/        # React application
+    ├── src/         # Components and logic
+    └── public/      # Static assets
+```
 
----
+## Usage
 
-Feel free to modify and extend this project for your needs.
+1. Backend will be available at `http://localhost:8000`
+2. Frontend will be available at `http://localhost:5173`
+3. Make sure to configure CORS to allow cross-origin requests
