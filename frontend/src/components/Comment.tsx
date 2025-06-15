@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import VoteButton from "./buttons/VoteButton";
 import { voteComment } from "../api/api";
-import type { CommentType } from "./CommentList";
+import type { CommentType } from "./types/comments";
 
 interface CommentProps extends CommentType {
   id: number;
@@ -110,7 +110,7 @@ const Comment: React.FC<CommentProps> = ({
           />
         ) : (
           <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
-            <span className="text-gray-600">{user[0]}</span>
+            <span className="text-gray-600">{user?.[0]}</span>
           </div>
         )}
         <span className="comment-text-special">{user}</span>

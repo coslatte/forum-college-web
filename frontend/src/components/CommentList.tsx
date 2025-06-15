@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Comment from "./Comment";
 import api from "../api/api";
-
-export type CommentType = {
-  id: number;
-  user: string;
-  profilePicture: string;
-  content: string;
-  upvotes: number;
-  downvotes: number;
-  created_at: string;
-  updated_at: string;
-};
+import type { CommentType } from "./types/comments";
 
 const CommentList: React.FC = () => {
   const [comments, setComments] = useState<CommentType[]>([]);
