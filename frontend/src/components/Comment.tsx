@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from "react";
 import VoteButton from "./buttons/VoteButton";
 import { voteComment } from "../services/api";
-import type { CommentType } from "./types/comments";
 
-interface CommentProps extends CommentType {
+interface CommentProps {
   id: number;
+  forum_user: {
+    id: number;
+    username: string;
+    profile_pic: string | null;
+  };
+  content: string;
+  upvotes: number;
+  downvotes: number;
+  created_at: string;
+  updated_at: string;
   onVoteChange: (commentId: number, voteType: "upvote" | "downvote") => void;
 }
 
 const Comment: React.FC<CommentProps> = ({
   id,
-  username,
-  profilePicture,
+  forum_user,
   content,
   upvotes,
   downvotes,
@@ -96,23 +104,23 @@ const Comment: React.FC<CommentProps> = ({
   return (
     <div className="flex flex-col w-full">
       {/* USER */}
-      <div className="comment-bg-200 z-10 w-full rounded-xl px-2 p-1 flex items-center gap-2">
-        {profilePicture ? (
+      <div className="bg-teal-700 z-10 w-full rounded-xl px-2 p-1 flex items-center gap-2">
+        {forum_user.profile_pic ? (
           <img
-            src={profilePicture}
-            alt={`${username}'s profile`}
+            src={forum_user.profile_pic}
+            alt={`${forum_user.username}'s profile`}
             className="w-8 h-8 rounded-full"
           />
         ) : (
           <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
-            <span className="text-gray-600">{username?.[0]}</span>
+            <span className="text-gray-600">{forum_user.username[0]}</span>
           </div>
         )}
-        <span className="comment-text-special">{username}</span>
+        <span className="comment-text-special">{forum_user.username}</span>
       </div>
 
       {/* CONTENT */}
-      <div className="flex flex-col justify-center items-start comment-bg-300 -mt-3 w-full rounded-b-xl px-2 h-full pt-4 p-4 space-y-1">
+      <div className="flex flex-col justify-center items-start bg-teal-50 -mt-3 w-full rounded-b-xl px-2 h-full pt-4 p-4 space-y-1">
         <span className="flex-shrink comment-text">{content}</span>
 
         {/* VOTES */}

@@ -1,7 +1,10 @@
 export type CommentType = {
   id: number;
-  username: string;
-  profilePicture: string | null;
+  forum_user: {
+    id: number;
+    username: string;
+    profile_pic: string | null;
+  };
   content: string;
   upvotes: number;
   downvotes: number;

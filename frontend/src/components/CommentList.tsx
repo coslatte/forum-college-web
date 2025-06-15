@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Comment from "./Comment";
 import api from "../services/api";
-
-export type CommentType = {
-  id: number;
-  username: string;
-  profilePicture: string;
-  content: string;
-  upvotes: number;
-  downvotes: number;
-  created_at: string;
-  updated_at: string;
-};
+import type { CommentType } from "./types";
 
 const CommentList: React.FC = () => {
   const [comments, setComments] = useState<CommentType[]>([]);
@@ -21,12 +11,14 @@ const CommentList: React.FC = () => {
   useEffect(() => {
     api
       .get<CommentType[]>("/comments")
-      .then((res) => {
-        setComments(res.data);
+      .then((response) => {
+        console.log('API Response:', response.data);
+        setComments(response.data);
         setLoading(false);
       })
-      .catch(() => {
-        setError("Error loading comments");
+      .catch((error) => {
+        console.error('Error fetching comments:', error);
+        setError(error.response?.data || error.message || "Error loading comments");
         setLoading(false);
       });
   }, []);
@@ -61,20 +53,28 @@ const CommentList: React.FC = () => {
         <div className="text-center py-2">Sin comentarios aún.</div>
       ) : (
         <div className="space-y-4">
-          {comments.map((comment) => (
-            <Comment
-              id={comment.id}
-              key={comment.id}
-              username={comment.username}
-              profilePicture={comment.profilePicture}
-              content={comment.content}
-              upvotes={comment.upvotes}
-              downvotes={comment.downvotes}
-              created_at={comment.created_at}
-              updated_at={comment.updated_at}
-              onVoteChange={handleVoteChange}
-            />
-          ))}
+          {comments.map(
+            (comment) => (
+              console.table(comment),
+              (
+                <Comment
+                  key={comment.id}
+                  id={comment.id}
+                  forum_user={{
+                    id: comment.forum_user?.id || 0,
+                    username: comment.forum_user?.username || "Usuario desconocido",
+                    profile_pic: comment.forum_user?.profile_pic || null,
+                  }}
+                  content={comment.content}
+                  upvotes={comment.upvotes}
+                  downvotes={comment.downvotes}
+                  created_at={comment.created_at}
+                  updated_at={comment.updated_at}
+                  onVoteChange={handleVoteChange}
+                />
+              )
+            )
+          )}
         </div>
       )}
     </div>

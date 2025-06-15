@@ -4,20 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
   // READ
   public function index()
   {
-    $comments = Comment::with('forumUser:id,username')->get();
+    $comments = Comment::with('forumUser:id,username,profile_pic')
+        ->get()
+        ->map(function ($comment) {
+            $comment->forum_user = $comment->forumUser;
+            return $comment;
+        });
+    Log::info('Comments with users:', ['comments' => $comments->toArray()]);
     return response()->json($comments);
   }
 
   // READ
   public function show($id)
   {
-    return response()->json(Comment::with('forumUser:id,username')->findOrFail($id));
+    return response()->json(Comment::with('forumUser:id,username,profile_pic')->findOrFail($id));
   }
 
   // DELETE
