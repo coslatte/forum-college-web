@@ -7,18 +7,20 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
+  // READ
   public function index()
   {
-    $comments = Comment::with('user:id,username')->get();
+    $comments = Comment::with('forumUser:id,username')->get();
     return response()->json($comments);
   }
 
+  // READ
   public function show($id)
   {
-    return response()->json(Comment::with('user:id,username')->findOrFail($id));
+    return response()->json(Comment::with('forumUser:id,username')->findOrFail($id));
   }
 
-  // Eliminar un comentario
+  // DELETE
   public function destroy($id)
   {
     $comment = Comment::findOrFail($id);
@@ -26,11 +28,11 @@ class CommentController extends Controller
     return response()->json(['message' => 'Comentario eliminado']);
   }
 
-  // Guardar un nuevo comentario
+  // CREATE
   public function store(Request $request)
   {
     $validated = $request->validate([
-      'users_id' => 'required|exists:users,id',
+      'forum_users_id' => 'required|exists:forum_users,id',
       'content' => 'required|string|max:1024',
       'upvotes' => 'integer|min:0|default:0',
       'downvotes' => 'integer|min:0|default:0',
@@ -40,7 +42,7 @@ class CommentController extends Controller
     return response()->json($comment, 201);
   }
 
-  // Actualizar un comentario
+  // UPDATE
   public function update(Request $request, $id)
   {
     $comment = Comment::findOrFail($id);

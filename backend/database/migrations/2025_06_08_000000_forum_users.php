@@ -10,7 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('forum_users', function (Blueprint $table) {
-            $table->increments("id");
+            $table->id();
             $table->string("username", 255);
             $table->string("profile_pic")->nullable();
             $table->timestamps();
