@@ -7,14 +7,12 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-  // Obtener todos los comentarios
   public function index()
   {
     $comments = Comment::with('user:id,username')->get();
     return response()->json($comments);
   }
 
-  // Obtener un comentario por id
   public function show($id)
   {
     return response()->json(Comment::with('user:id,username')->findOrFail($id));
@@ -37,7 +35,7 @@ class CommentController extends Controller
       'upvotes' => 'integer|min:0|default:0',
       'downvotes' => 'integer|min:0|default:0',
     ]);
-    
+
     $comment = Comment::create($validated);
     return response()->json($comment, 201);
   }
@@ -51,7 +49,7 @@ class CommentController extends Controller
       'upvotes' => 'integer|min:0',
       'downvotes' => 'integer|min:0',
     ]);
-    
+
     $comment->update($validated);
     return response()->json($comment);
   }
