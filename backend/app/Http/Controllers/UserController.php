@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ForumUser;
+use App\Models\ForumUsers;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     public function index()
     {
-        return response()->json(ForumUser::all());
+        return response()->json(ForumUsers::all());
     }
 
     public function show($id)
     {
-        $user = ForumUser::find($id);
+        $user = ForumUsers::find($id);
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
@@ -28,7 +28,7 @@ class UserController extends Controller
             'profile_pic' => 'nullable|image|max:2048',
         ]);
 
-        $user = ForumUser::create($validated);
+        $user = ForumUsers::create($validated);
         return response()->json($user, 201);
     }
 }
