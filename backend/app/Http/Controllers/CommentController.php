@@ -9,7 +9,7 @@ class CommentController extends Controller
 {
   public function index()
   {
-    $comments = Comment::with('user:id,username')->get();        
+    $comments = Comment::with('user:id,username,profile_pic')->get();        
     return response()->json($comments);
   }
 

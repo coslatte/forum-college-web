@@ -12,7 +12,6 @@ class UserController extends Controller
         return response()->json(User::all());
     }
 
-<<<<<<< HEAD
     public function show($id)
     {
         $user = User::find($id);
@@ -26,20 +25,10 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'username' => 'required|string|max:60|min:4|unique:username',
-=======
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'username' => 'required|string|max:60|min:4|unique:users,username',
->>>>>>> 43387c9f2e8211cfb67c995618000e0ac5179f54
             'profile_pic' => 'nullable|image|max:2048',
         ]);
 
         $user = User::create($validated);
-<<<<<<< HEAD
-
-=======
->>>>>>> 43387c9f2e8211cfb67c995618000e0ac5179f54
         return response()->json($user, 201);
     }
 }
