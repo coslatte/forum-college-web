@@ -12,6 +12,10 @@ class DatabaseSeeder extends Seeder
     {
         ForumUsers::factory()
             ->count(5)
+            ->has(
+                Comment::factory()
+                    ->count(3)
+            )
             ->create()
             ->each(function ($user) {
                 Comment::factory()

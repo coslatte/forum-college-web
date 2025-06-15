@@ -22,72 +22,65 @@ const Comment: React.FC<CommentProps> = ({
   const [isUpvoted, setUpvoted] = useState(false);
   const [isDownvoted, setDownvoted] = useState(false);
 
-  const handleUpvote = async () => {
+  const handleVote = async (voteType: "upvote" | "downvote") => {
     try {
-      // Si el downvote está activo, desactivar
-      if (isDownvoted) {
+      // Esto regula que no se accionen simultáneamente upvote y downvote
+      if (voteType === "upvote" && isDownvoted) {
         setDownvotes(downvotesState - 1);
         setDownvoted(false);
-      }
-      // Manejar upvote
-      if (!isUpvoted) {
-        setUpvotes(upvotesState + 1);
-        setUpvoted(true);
-
-        await voteComment(id, "upvote");
-        onVoteChange?.(id, "upvote");
-      } else {
+      } else if (voteType === "downvote" && isUpvoted) {
         setUpvotes(upvotesState - 1);
         setUpvoted(false);
-
-        await voteComment(id, "upvote");
-        onVoteChange?.(id, "upvote");
       }
+
+      // Manejar votos
+      if (voteType === "upvote" ? isUpvoted : isDownvoted) {
+        // Quitar voto
+        if (voteType === "upvote") {
+          setUpvotes(upvotesState - 1);
+          setUpvoted(false);
+        } else {
+          setDownvotes(downvotesState - 1);
+          setDownvoted(false);
+        }
+      } else {
+        // Dar voto
+        if (voteType === "upvote") {
+          setUpvotes(upvotesState + 1);
+          setUpvoted(true);
+        } else {
+          setDownvotes(downvotesState + 1);
+          setDownvoted(true);
+        }
+      }
+
+      // Llamada a la API y callback
+      await voteComment(id, voteType);
+      onVoteChange?.(id, voteType);
     } catch {
-      // Revertir cambios si hay error
-      if (!isUpvoted) {
-        setUpvotes(upvotesState - 1);
-        setUpvoted(false);
+      // Revertir cambios en caso de error
+      if (voteType === "upvote") {
+        if (!isUpvoted) {
+          setUpvotes(upvotesState - 1);
+          setUpvoted(false);
+        } else {
+          setUpvotes(upvotesState + 1);
+          setUpvoted(true);
+        }
       } else {
-        setUpvotes(upvotesState + 1);
-        setUpvoted(true);
+        if (!isDownvoted) {
+          setDownvotes(downvotesState - 1);
+          setDownvoted(false);
+        } else {
+          setDownvotes(downvotesState + 1);
+          setDownvoted(true);
+        }
       }
-      if (isDownvoted) {
+      // Restaurar voto opuesto si estaba activo
+      if (voteType === "upvote" && isDownvoted) {
         setDownvotes(downvotesState + 1);
         setDownvoted(true);
-      }
-    }
-  };
-
-  const handleDownvote = async () => {
-    try {
-      // Si el upvote está activo, lo desactivamos
-      if (isUpvoted) {
-        setUpvotes(upvotesState - 1);
-        setUpvoted(false);
-      }
-      // Manejamos el downvote
-      if (!isDownvoted) {
-        setDownvotes(downvotesState + 1);
-        setDownvoted(true);
-        await voteComment(id, "downvote");
-        onVoteChange?.(id, "downvote");
-      } else {
-        setDownvotes(downvotesState - 1);
-        setDownvoted(false);
-        await voteComment(id, "downvote");
-        onVoteChange?.(id, "downvote");
-      }
-    } catch {
-      // Revertir cambios si hay error
-      if (!isDownvoted) {
-        setDownvotes(downvotesState - 1);
-        setDownvoted(false);
-      } else {
-        setDownvotes(downvotesState + 1);
-        setDownvoted(true);
-      }
-      if (isUpvoted) {
+      } else if (voteType === "downvote" && isUpvoted) {
         setUpvotes(upvotesState + 1);
         setUpvoted(true);
       }
@@ -129,7 +122,7 @@ const Comment: React.FC<CommentProps> = ({
               voteType="upvote"
               size={20}
               isVoted={isUpvoted}
-              onVote={handleUpvote}
+              onVote={() => handleVote("upvote")}
             />
             <span>{upvotesState}</span>
           </div>
@@ -138,7 +131,7 @@ const Comment: React.FC<CommentProps> = ({
               voteType="downvote"
               size={20}
               isVoted={isDownvoted}
-              onVote={handleDownvote}
+              onVote={() => handleVote("downvote")}
             />
             <span>{downvotesState}</span>
           </div>

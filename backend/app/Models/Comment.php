@@ -12,12 +12,20 @@ class Comment extends Model
   protected $table = 'comments';
 
   protected $fillable = [
+    'users_id',
     'content',
     'upvotes',
-    'downvotes',
-    'users_id',
+    'downvotes'
   ];
 
+<<<<<<< Updated upstream
+=======
+  protected $casts = [
+    'upvotes' => 'integer',
+    'downvotes' => 'integer'
+  ];
+
+>>>>>>> Stashed changes
 
   public function getCommentDate($format = 'Y-m-d')
   {
@@ -31,6 +39,10 @@ class Comment extends Model
 
   public function user()
   {
+<<<<<<< Updated upstream
     return $this->belongsTo(ForumUsers::class, 'users_id');
+=======
+    return $this->belongsTo(User::class, 'users_id');
+>>>>>>> Stashed changes
   }
 }
