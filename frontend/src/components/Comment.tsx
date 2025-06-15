@@ -5,7 +5,7 @@ import type { CommentType } from "./types/comments";
 
 interface CommentProps extends CommentType {
   id: number;
-  onVoteChange?: (commentId: number, voteType: "upvote" | "downvote") => void;
+  onVoteChange: (commentId: number, voteType: "upvote" | "downvote") => void;
 }
 
 const Comment: React.FC<CommentProps> = ({
@@ -56,7 +56,7 @@ const Comment: React.FC<CommentProps> = ({
 
       // Llamada a la API y callback
       await voteComment(id, voteType);
-      onVoteChange?.(id, voteType);
+      onVoteChange(id, voteType);
     } catch {
       // Revertir cambios en caso de error
       if (voteType === "upvote") {

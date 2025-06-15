@@ -9,6 +9,7 @@ class ForumUsers extends Model
 {
     /** @use HasFactory<\Database\Factories\UsersFactory> */
     use HasFactory;
+    protected $factory = \Database\Factories\ForumUsersFactory::class;
 
     protected $table = 'forum_users';
 
