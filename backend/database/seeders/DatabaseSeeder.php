@@ -2,24 +2,21 @@
 
 namespace Database\Seeders;
 
-use App\Models\Users;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\ForumUsers;
+use App\Models\Comment;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        Users::factory()
+        ForumUsers::factory()
             ->count(5)
-            ->hasComments(3)
-            ->create();
-
-        // $this->call([
-        //     CommentsTableSeeder::class
-        // ]);
+            ->create()
+            ->each(function ($user) {
+                Comment::factory()
+                    ->count(3)
+                    ->create(['forum_users_id' => $user->id]);
+            });
     }
 }

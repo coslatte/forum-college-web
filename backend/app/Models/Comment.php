@@ -18,7 +18,7 @@ class Comment extends Model
     'users_id',
   ];
 
-  
+
   public function getCommentDate($format = 'Y-m-d')
   {
     return $this->created_at ? $this->created_at->format($format) : null;
@@ -31,7 +31,6 @@ class Comment extends Model
 
   public function user()
   {
-    return $this->belongsTo(Users::class, 'users_id');
+    return $this->belongsTo(ForumUsers::class, 'users_id');
   }
-
 }

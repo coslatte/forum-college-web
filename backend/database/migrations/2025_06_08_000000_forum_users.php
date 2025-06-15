@@ -6,19 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    
+
     public function up(): void
     {
-        Schema::create('users1', function (Blueprint $table) {
+        Schema::create('forum_users', function (Blueprint $table) {
             $table->increments("id");
             $table->string("username", 255);
-            $table->binary("profile_pic")->nullable();
+            $table->string("profile_pic")->nullable();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('users1');
+        Schema::dropIfExists('forum_users');
     }
 };

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    
+
     public function up(): void
     {
         Schema::create("comments", function (Blueprint $table) {
@@ -14,8 +14,8 @@ return new class extends Migration
             $table->string("content", 1024);
             $table->unsignedInteger("upvotes")->default(0);
             $table->unsignedInteger("downvotes")->default(0);
-            $table->unsignedInteger('users_id');
-            $table->foreign('users_id')->references('id')->on('users1')->onDelete('cascade');
+            $table->unsignedInteger('forum_users_id');
+            $table->foreign('forum_users_id')->references('id')->on('forum_users')->onDelete('cascade');
 
             $table->timestamps();
         });
