@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import VoteButton from "./buttons/VoteButton";
-import { voteComment } from "../api/api";
+import { voteComment } from "../services/api";
 import type { CommentType } from "./types/comments";
 
 interface CommentProps extends CommentType {
@@ -33,11 +33,13 @@ const Comment: React.FC<CommentProps> = ({
       if (!isUpvoted) {
         setUpvotes(upvotesState + 1);
         setUpvoted(true);
+
         await voteComment(id, "upvote");
         onVoteChange?.(id, "upvote");
       } else {
         setUpvotes(upvotesState - 1);
         setUpvoted(false);
+
         await voteComment(id, "upvote");
         onVoteChange?.(id, "upvote");
       }

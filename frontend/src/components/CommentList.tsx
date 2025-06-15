@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Comment from "./Comment";
-import api from "../api/api";
+import api from "../services/api";
 import type { CommentType } from "./types/comments";
 
 const CommentList: React.FC = () => {
