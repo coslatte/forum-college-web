@@ -3,33 +3,31 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ForumUsers;
 
 class Comment extends Model
 {
+  use HasFactory;
+
+  protected $factory = \Database\Factories\CommentFactory::class;
+
   protected $table = 'comments';
 
   protected $fillable = [
+    'forum_users_id',
     'content',
     'upvotes',
-    'downvotes',
-    'user_id',
+    'downvotes'
   ];
 
-  
-  public function getCommentDate($format = 'Y-m-d')
-  {
-    return $this->created_at ? $this->created_at->format($format) : null;
-  }
+  protected $casts = [
+    'upvotes' => 'integer',
+    'downvotes' => 'integer'
+  ];
 
-  public function getCommentHour($format = 'H:i:s')
+  public function forumUser()
   {
-    return $this->created_at ? $this->created_at->format($format) : null;
+    return $this->belongsTo(ForumUsers::class, 'forum_users_id');
   }
-
-  public function user()
-  {
-    return $this->belongsTo(User::class, 'user_id');
-  }
-
 }
