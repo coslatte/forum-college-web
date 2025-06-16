@@ -12,25 +12,7 @@ class CommentController extends Controller
   // READ
   public function index(Request $request)
   {
-<<<<<<< HEAD
     $comments = Comment::with('user:id,username,profile_pic')->get();        
-=======
-    $limit  = (int) $request->query('limit', 10);
-    $offset = (int) $request->query('offset', 0);
-
-    $query = Comment::with('forumUser:id,username,profile_pic')
-      ->orderBy('created_at', 'desc');
-
-    $comments = $query
-      ->skip($offset)
-      ->take($limit)
-      ->get()
-      ->map(function ($comment) {
-        $comment->forum_user = $comment->forumUser;
-        return $comment;
-      });
-    Log::info('Comments with users:', ['comments' => $comments->toArray()]);
->>>>>>> bb3f310292d5411d430d9e8c47b3e0eccab88d5a
     return response()->json($comments);
   }
 
