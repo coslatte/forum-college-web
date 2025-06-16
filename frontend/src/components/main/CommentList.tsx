@@ -1,8 +1,8 @@
 import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
 import Comment from "./Comment";
-import api from "../services/api";
-import type { CommentType } from "../types";
-import type { CommentListHandle } from "../interfaces";
+import api from "../../services/api";
+import type { CommentType } from "../../types";
+import type { CommentListHandle } from "../../interfaces";
 
 const CommentList = forwardRef<CommentListHandle>((_props, ref) => {
   const [comments, setComments] = useState<CommentType[]>([]);

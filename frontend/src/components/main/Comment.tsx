@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { voteComment } from "../services/api";
-import VoteButton from "./buttons/VoteButton";
-import { formatFullDate, timeAgo } from "../utils/date";
-import { ProfilePic } from "./ProfilePic";
+import { voteComment } from "../../services/api";
+import VoteButton from "../periferics/VoteButton";
+import { formatFullDate, timeAgo } from "../../utils/date";
+import { ProfilePic } from "../periferics/ProfilePic";
 
 interface CommentProps {
   id: number;
