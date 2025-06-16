@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { voteComment } from "../services/api";
 import VoteButton from "./buttons/VoteButton";
 import { formatFullDate, timeAgo } from "../utils/date";
+import { ProfilePic } from "./ProfilePic";
 
 interface CommentProps {
   id: number;
@@ -136,17 +137,10 @@ const Comment: React.FC<CommentProps> = ({
     <div className="flex flex-col w-full">
       {/* USER */}
       <div className="bg-teal-700 z-10 w-full rounded-xl px-2 p-1 flex items-center gap-2 justify-between">
-        {forum_user.profile_pic ? (
-          <img
-            src={forum_user.profile_pic}
-            alt={`${forum_user.username}'s profile`}
-            className="w-8 h-8 rounded-full"
-          />
-        ) : (
-          <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
-            <span className="text-gray-600">{forum_user.username[0]}</span>
-          </div>
-        )}
+        <ProfilePic
+          profile_pic={forum_user.profile_pic}
+          username={forum_user.username}
+        />
         <span className="comment-text-special">{forum_user.username}</span>
 
         {/* TIME */}
