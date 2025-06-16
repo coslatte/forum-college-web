@@ -17,11 +17,11 @@ export const ProfilePic: React.FC<ProfilePicProps> = ({
         <img
           src={profile_pic}
           alt={`${username}'s profile`}
-          className={`w-${size} h-${size} rounded-full`}
+          className={`w-${size} h-${size} max-w-16 max-h-16 rounded-full`}
         />
       ) : (
         <div
-          className={`w-${size} h-${size} rounded-full bg-gray-300 flex items-center justify-center`}
+          className={`w-${size} h-${size} max-w-16 max-h-16 rounded-full bg-gray-300 flex items-center justify-center`}
         >
           <span className="text-gray-600">{username[0]}</span>
         </div>
