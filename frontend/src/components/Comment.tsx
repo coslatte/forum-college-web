@@ -37,7 +37,9 @@ const Comment: React.FC<CommentProps> = ({
 
   const handleVote = async (voteType: "upvote" | "downvote") => {
     try {
-      const removing = (isUpvoted && voteType === "upvote") || (isDownvoted && voteType === "downvote");
+      const removing =
+        (isUpvoted && voteType === "upvote") ||
+        (isDownvoted && voteType === "downvote");
       const delta = removing ? -1 : 1;
 
       // Actualiza optimistamente el estado local
