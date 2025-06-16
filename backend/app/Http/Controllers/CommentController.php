@@ -10,9 +10,17 @@ use Illuminate\Support\Facades\DB;
 class CommentController extends Controller
 {
   // READ
-  public function index()
+  public function index(Request $request)
   {
-    $comments = Comment::with('forumUser:id,username,profile_pic')
+    $limit  = (int) $request->query('limit', 10);
+    $offset = (int) $request->query('offset', 0);
+
+    $query = Comment::with('forumUser:id,username,profile_pic')
+      ->orderBy('created_at', 'desc');
+
+    $comments = $query
+      ->skip($offset)
+      ->take($limit)
       ->get()
       ->map(function ($comment) {
         $comment->forum_user = $comment->forumUser;

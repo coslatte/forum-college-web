@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { voteComment } from "../services/api";
 import VoteButton from "./buttons/VoteButton";
+import { formatFullDate, timeAgo } from "../utils/date";
 
 interface CommentProps {
   id: number;
@@ -28,6 +29,8 @@ const Comment: React.FC<CommentProps> = ({
   content,
   upvotes,
   downvotes,
+  created_at,
+  updated_at,
   onVoteChange,
 }) => {
   const [upvotesState, setUpvotes] = useState<number>(upvotes);
@@ -36,40 +39,95 @@ const Comment: React.FC<CommentProps> = ({
   const [isDownvoted, setDownvoted] = useState(false);
 
   const handleVote = async (voteType: "upvote" | "downvote") => {
-    try {
-      const removing =
-        (isUpvoted && voteType === "upvote") ||
-        (isDownvoted && voteType === "downvote");
-      const delta = removing ? -1 : 1;
+    // Guardar snapshot para posible rollback en caso de error
+    const prevState = {
+      upvotes: upvotesState,
+      downvotes: downvotesState,
+      isUp: isUpvoted,
+      isDown: isDownvoted,
+    };
 
-      // Actualiza optimistamente el estado local
+    // Determinar la operación solicitada
+    const isRemoving =
+      (isUpvoted && voteType === "upvote") ||
+      (isDownvoted && voteType === "downvote");
+
+    const isSwitching =
+      (voteType === "upvote" && isDownvoted) ||
+      (voteType === "downvote" && isUpvoted);
+
+    // 1) Actualización optimista en el UI --------------
+    let optimisticUp = upvotesState;
+    let optimisticDown = downvotesState;
+
+    if (isSwitching) {
+      // Quitar voto previo y aplicar nuevo
       if (voteType === "upvote") {
-        setUpvoted(!isUpvoted);
-        setUpvotes(upvotesState + delta);
-        if (!removing) {
-          setDownvoted(false);
-        }
-      } else {
-        setDownvoted(!isDownvoted);
-        setDownvotes(downvotesState + delta);
-        if (!removing) {
-          setUpvoted(false);
-        }
+        optimisticUp += 1;
+        optimisticDown -= 1;
+        setUpvoted(true);
+        setDownvoted(false);
+      } else if (voteType === "downvote") {
+        optimisticUp -= 1;
+        optimisticDown += 1;
+        setUpvoted(false);
+        setDownvoted(true);
       }
+    } else {
+      // Añadir o quitar
+      const delta = isRemoving ? -1 : 1;
 
-      // Llama a la API y actualiza el estado con la respuesta real
-      const updated = await voteComment(id, voteType, delta);
-      setUpvotes(updated.upvotes);
-      setDownvotes(updated.downvotes);
+      if (voteType === "upvote") {
+        optimisticUp += delta;
+        setUpvoted(!isUpvoted);
+        if (!isRemoving) setDownvoted(false);
+      } else if (voteType === "downvote") {
+        optimisticDown += delta;
+        setDownvoted(!isDownvoted);
+        if (!isRemoving) setUpvoted(false);
+      }
+    }
+    setUpvotes(optimisticUp);
+    setDownvotes(optimisticDown);
 
-      onVoteChange(id, voteType, updated.upvotes, updated.downvotes);
+    // 2) Sincronizar con el servidor -------------------
+    try {
+      if (isSwitching) {
+        // Enviar dos peticiones: quitar anterior, añadir nueva
+        const firstDelta = -1;
+        const secondDelta = 1;
+
+        // Quitar el voto anterior
+        await voteComment(
+          id,
+          voteType === "upvote" ? "downvote" : "upvote",
+          firstDelta
+        );
+
+        // Nuevo voto
+        const updated = await voteComment(id, voteType, secondDelta);
+        setUpvotes(updated.upvotes);
+        setDownvotes(updated.downvotes);
+        onVoteChange(id, voteType, updated.upvotes, updated.downvotes);
+      } else {
+        const delta = isRemoving ? -1 : 1;
+        const updated = await voteComment(id, voteType, delta);
+        setUpvotes(updated.upvotes);
+        setDownvotes(updated.downvotes);
+
+        onVoteChange(id, voteType, updated.upvotes, updated.downvotes);
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      // Rollback visual si la petición falla
+      setUpvotes(prevState.upvotes);
+      setDownvotes(prevState.downvotes);
+      setUpvoted(prevState.isUp);
+      setDownvoted(prevState.isDown);
     }
   };
 
   useEffect(() => {
-    // Si el componente recibe nuevos valores de upvotes/downvotes, actualizamos el estado
     setUpvotes(upvotes);
     setDownvotes(downvotes);
   }, [upvotes, downvotes]);
@@ -77,7 +135,7 @@ const Comment: React.FC<CommentProps> = ({
   return (
     <div className="flex flex-col w-full">
       {/* USER */}
-      <div className="bg-teal-700 z-10 w-full rounded-xl px-2 p-1 flex items-center gap-2">
+      <div className="bg-teal-700 z-10 w-full rounded-xl px-2 p-1 flex items-center gap-2 justify-between">
         {forum_user.profile_pic ? (
           <img
             src={forum_user.profile_pic}
@@ -90,6 +148,17 @@ const Comment: React.FC<CommentProps> = ({
           </div>
         )}
         <span className="comment-text-special">{forum_user.username}</span>
+
+        {/* TIME */}
+        <span className="text-xs text-gray-200">
+          · {timeAgo(created_at)}
+          {updated_at !== created_at && ` · editado ${timeAgo(updated_at)}`}
+        </span>
+
+        {/* FULL DATE */}
+        <span className="ml-auto text-sm md:text-base text-gray-100/50 font-semibold">
+          {formatFullDate(updated_at)}
+        </span>
       </div>
 
       {/* CONTENT */}

@@ -12,8 +12,19 @@ export const voteComment = async (
   voteType: "upvote" | "downvote",
   delta: -1 | 1
 ) => {
-  const response = await api.post(`/comments/${commentId}/vote`, { voteType, delta });
-  return response.data; // devuelve el comentario actualizado
+  const response = await api.post(`/comments/${commentId}/vote`, {
+    voteType,
+    delta,
+  });
+  return response.data;
+};
+
+export const createComment = async (data: {
+  forum_users_id: number;
+  content: string;
+}) => {
+  const response = await api.post("/comments", data);
+  return response.data;
 };
 
 export const getCommentVotes = async (commentId: number) => {
