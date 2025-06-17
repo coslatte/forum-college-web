@@ -57,10 +57,9 @@ const Comment: React.FC<CommentProps> = ({
 
     try {
       await deleteComment(id);
-      onCommentDelete(id); // Optimistic UI update
+      onCommentDelete(id);
     } catch (error) {
       console.error("Failed to delete comment:", error);
-      // Optionally show an error to the user
     }
     setIsOptionsOpen(false);
   };
@@ -72,11 +71,10 @@ const Comment: React.FC<CommentProps> = ({
     }
     try {
       await updateComment(id, editedContent);
-      onCommentUpdate(id, editedContent); // Optimistic UI update
+      onCommentUpdate(id, editedContent);
       setIsEditing(false);
     } catch (error) {
       console.error("Failed to update comment:", error);
-      // Optionally show an error to the user and revert changes
     }
     setIsOptionsOpen(false);
   };
@@ -88,7 +86,7 @@ const Comment: React.FC<CommentProps> = ({
         !optionsMenuRef.current.contains(event.target as Node)
       ) {
         setIsOptionsOpen(false);
-        setIsDeleting(false); // Reset delete confirmation on click outside
+        setIsDeleting(false);
       }
     };
 
@@ -198,7 +196,7 @@ const Comment: React.FC<CommentProps> = ({
   return (
     <div className="flex flex-col w-full">
       {/* USER */}
-      <div className="bg-teal-700 z-10 w-full rounded-xl px-2 p-1 flex items-center gap-2 justify-between">
+      <div className="comment-bg-100 z-10 w-full rounded-xl px-2 p-1 flex items-center gap-2 justify-between">
         <ProfilePic
           profile_pic={forum_user.profile_pic}
           username={forum_user.username}
@@ -206,13 +204,13 @@ const Comment: React.FC<CommentProps> = ({
         <span className="comment-text-special">{forum_user.username}</span>
 
         {/* TIME */}
-        <span className="text-xs text-gray-200">
+        <span className="text-xs text-gray-200 text-shadow-lg">
           · {timeAgo(created_at)}
           {updated_at !== created_at && ` · editado ${timeAgo(updated_at)}`}
         </span>
 
         {/* FULL DATE */}
-        <span className="ml-auto text-sm md:text-base text-gray-100/50 font-semibold">
+        <span className="ml-auto text-sm md:text-base text-shadow-lg text-gray-100/75 font-semibold">
           {formatFullDate(updated_at)}
         </span>
       </div>
@@ -231,14 +229,14 @@ const Comment: React.FC<CommentProps> = ({
               <div className="flex space-x-2">
                 <button
                   onClick={handleUpdate}
-                  className="px-3 py-1 bg-teal-600 text-white rounded-md hover:bg-teal-700"
+                  className="px-3 py-1 special-button text-white rounded-md"
                 >
                   Guardar
                 </button>
                 <button
                   onClick={() => {
                     setIsEditing(false);
-                    setEditedContent(content); // Reset content on cancel
+                    setEditedContent(content);
                   }}
                   className="px-3 py-1 bg-gray-300 text-black rounded-md hover:bg-gray-400"
                 >

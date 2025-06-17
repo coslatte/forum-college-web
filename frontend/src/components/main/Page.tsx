@@ -17,7 +17,7 @@ export const Page: React.FC = () => {
   return (
     <div className="min-h-screen bg-cool-300 flex flex-col">
       {/* Header */}
-      <header className="bg-cool-100 text-white shadow-lg">
+      <header className="bg-cool-100 text-white shadow-lg border-b-2 border-gray-800">
         <div className="grid grid-cols-3 gap-4 p-4">
           <div className="col-span-2">
             <h1 className="text-3xl font-bold">Foro de Comentarios</h1>
@@ -52,7 +52,7 @@ export const Page: React.FC = () => {
 
             <button
               onClick={() => listRef.current?.loadMore()}
-              className="bg-teal-600 hover:bg-teal-400 text-white font-bold py-2 px-4 rounded mt-4"
+              className="special-button hover:bg-teal-400 text-white font-bold py-2 px-4 rounded mt-4"
             >
               Cargar más
             </button>
@@ -61,7 +61,7 @@ export const Page: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-cool-200 text-sm text-gray-100">
+      <footer className="bg-cool-100-offset text-sm text-gray-100 border-t-2 border-gray-800">
         <div className="flex flex-col container mx-auto px-4 py-4">
           <p className="text-center">&copy; 2025 Foro de Comentarios</p>
           <p className="text-center">Desarrollado por</p>
@@ -69,7 +69,7 @@ export const Page: React.FC = () => {
             href="https://github.com/coslatte"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-center"
+            className="text-center text-supercreditos"
           >
             Gabriel Paz Ruíz
           </a>
@@ -77,7 +77,7 @@ export const Page: React.FC = () => {
             href="https://github.com/pedromcd999"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-center"
+            className="text-center text-supercreditos opacity-90"
           >
             Pedro Miguel
           </a>

@@ -21,7 +21,7 @@ export const NewComment: React.FC<NewCommentProps> = ({ onCommentCreated }) => {
         forum_users_id: 1,
         content: newCommentContent.trim(),
       });
-      onCommentCreated(newComment); // Notify parent component
+      onCommentCreated(newComment);
       setNewCommentContent("");
     } catch (error) {
       console.error("Error creating comment:", error);
@@ -35,7 +35,7 @@ export const NewComment: React.FC<NewCommentProps> = ({ onCommentCreated }) => {
       <div className="flex items-center justify-center p-4">
         {/* ESCRIBIR COMENTARIO */}
         <input
-          className="flex-grow p-2 rounded-lg mr-2 border border-teal-500 bg-teal-50"
+          className="flex-grow p-2 rounded-lg mr-2 comment-bg-50"
           type="text"
           value={newCommentContent}
           onChange={(e) => setNewCommentContent(e.target.value)}
@@ -51,7 +51,7 @@ export const NewComment: React.FC<NewCommentProps> = ({ onCommentCreated }) => {
         <button
           disabled={!newCommentContent.trim() || isSubmitting}
           onClick={handleCreateComment}
-          className="bg-teal-500 hover:bg-teal-600 disabled:opacity-50 text-white font-bold py-2 px-4 rounded border border-teal-500"
+          className="special-button cursor-pointer disabled:opacity-50 text-white font-bold py-2 px-4 rounded border border-teal-500"
         >
           Comentar
         </button>

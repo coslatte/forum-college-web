@@ -15,13 +15,19 @@
 }
 
 .bg-cool-100 {
-  @apply bg-gradient-to-l from-orange-600 via-gray-800 to-teal-600;
-  animation: gradient 30s ease-in-out infinite;
+  @apply bg-gradient-to-l from-teal-700  to-cyan-700;
+  animation: gradient 10s ease-in-out infinite;
   background-size: 200% 200%;
 }
 
+.bg-cool-100-offset {
+  @apply bg-gradient-to-l from-cyan-600  to-teal-600;
+  animation: gradient 18s ease-in-out infinite;
+  background-size: 250% 250%;
+}
+
 .bg-cool-200 {
-  @apply bg-gradient-to-r from-orange-900 via-gray-800 to-teal-900;
+  @apply bg-gradient-to-r from-orange-900 via-indigo-800 to-teal-900;
   animation: gradient 30s ease-in-out infinite;
   background-size: 200% 200%;
 }
@@ -32,9 +38,15 @@
   background-size: 125% 125%;
 }
 
+.comment-bg-50 {
+  @apply bg-gradient-to-r border-2 border-gray-300 from-orange-100 via-indigo-50 to-teal-100;
+  animation: gradient 30s ease-in-out infinite;
+  background-size: 125% 125%;
+}
+
 .comment-bg-100 {
-  @apply bg-gradient-to-br from-orange-100 via-teal-100 to-orange-100;
-  animation: gradient 5s ease infinite;
+  @apply bg-gradient-to-r border-2 border-gray-800 from-orange-300 via-indigo-300 to-teal-300;
+  animation: gradient 10s ease-in-out infinite;
   background-size: 200% 200%;
 }
 
@@ -44,16 +56,30 @@
   background-size: 150% 150%;
 }
 
-.comment-bg-300 {
-  @apply bg-gradient-to-l from-teal-50 via-orange-50 to-teal-50;
-  animation: gradient 28s ease infinite;
-  background-size: 125% 125%;
-}
-
 .comment-text {
   @apply sm:text-sm sm:text-shadow-sm text-shadow-md lg:text-lg text-gray-950 lg:text-shadow-lg text-shadow-gray-950/20;
 }
 
 .comment-text-special {
   @apply sm:text-sm font-bold italic sm:text-shadow-sm text-shadow-md md:text-2xl lg:text-lg text-gray-100 lg:text-shadow-lg text-shadow-gray-950/20;
+}
+
+.special-button {
+  @apply border-2 rounded-lg border-gray-600;
+  background-image: linear-gradient(to right, #0d9488, #0891b2);
+  animation: gradient 30s ease-in-out infinite;
+  background-size: 300% 300%;
+  transition: background-image 0.5s ease;
+}
+
+.special-button:hover {
+  animation: none;
+  background-image: linear-gradient(to right, #0f766e, #0e7490);
+}
+
+.text-supercreditos {
+  @apply bg-clip-text text-transparent font-semibold;
+  background-image: linear-gradient(to right, #fdba74, #a5b4fc, #5eead4);
+  animation: gradient 10s ease-in-out infinite;
+  background-size: 200% 200%;
 }
