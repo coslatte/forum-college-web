@@ -4,8 +4,6 @@ College project showcasing modern frontend and backend integration for universit
 
 ![Main UI Screenshot](assets/Screenshot%202025-06-17%20at%2001-48-58%20Vite%20React%20TS.png)
 
-_Main UI Screenshot_
-
 ## Key Features
 
 - Interface with React and Tailwind CSS
