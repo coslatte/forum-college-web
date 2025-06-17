@@ -49,4 +49,25 @@ export const getCommentVotes = async (commentId: number) => {
   return response.data;
 };
 
+/**
+ * Updates a comment's content
+ * @param commentId Identification of the comment
+ * @param content The new content for the comment
+ * @returns The updated comment data
+ */
+export const updateComment = async (commentId: number, content: string) => {
+  const response = await api.put(`/comments/${commentId}`, { content });
+  return response.data;
+};
+
+/**
+ * Deletes a comment
+ * @param commentId Identification of the comment
+ * @returns Confirmation message
+ */
+export const deleteComment = async (commentId: number) => {
+  const response = await api.delete(`/comments/${commentId}`);
+  return response.data;
+};
+
 export default api;

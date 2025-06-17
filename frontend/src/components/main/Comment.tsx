@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { voteComment } from "../../services/api";
+import React, { useState, useEffect, useRef } from "react";
+import { voteComment, deleteComment, updateComment } from "../../services/api";
 import VoteButton from "../periferics/VoteButton";
 import { formatFullDate, timeAgo } from "../../utils/date";
 import { ProfilePic } from "../periferics/ProfilePic";
+import { PiDotsThreeCircle } from "react-icons/pi";
 
 interface CommentProps {
   id: number;
@@ -22,6 +23,8 @@ interface CommentProps {
     upvotes: number,
     downvotes: number
   ) => void;
+  onCommentDelete: (commentId: number) => void;
+  onCommentUpdate: (commentId: number, newContent: string) => void;
 }
 
 const Comment: React.FC<CommentProps> = ({
@@ -33,11 +36,70 @@ const Comment: React.FC<CommentProps> = ({
   created_at,
   updated_at,
   onVoteChange,
+  onCommentDelete,
+  onCommentUpdate,
 }) => {
   const [upvotesState, setUpvotes] = useState<number>(upvotes);
   const [downvotesState, setDownvotes] = useState<number>(downvotes);
   const [isUpvoted, setUpvoted] = useState(false);
   const [isDownvoted, setDownvoted] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState(content);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+  const optionsMenuRef = useRef<HTMLDivElement>(null);
+
+  const handleDelete = async () => {
+    if (!isDeleting) {
+      setIsDeleting(true);
+      return;
+    }
+
+    try {
+      await deleteComment(id);
+      onCommentDelete(id); // Optimistic UI update
+    } catch (error) {
+      console.error("Failed to delete comment:", error);
+      // Optionally show an error to the user
+    }
+    setIsOptionsOpen(false);
+  };
+
+  const handleUpdate = async () => {
+    if (editedContent.trim() === "" || editedContent === content) {
+      setIsEditing(false);
+      return;
+    }
+    try {
+      await updateComment(id, editedContent);
+      onCommentUpdate(id, editedContent); // Optimistic UI update
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Failed to update comment:", error);
+      // Optionally show an error to the user and revert changes
+    }
+    setIsOptionsOpen(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        optionsMenuRef.current &&
+        !optionsMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsOptionsOpen(false);
+        setIsDeleting(false); // Reset delete confirmation on click outside
+      }
+    };
+
+    if (isOptionsOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOptionsOpen]);
 
   const handleVote = async (voteType: "upvote" | "downvote") => {
     // Guardar snapshot para posible rollback en caso de error
@@ -156,33 +218,108 @@ const Comment: React.FC<CommentProps> = ({
       </div>
 
       {/* CONTENT */}
-      <div className="flex flex-col justify-center items-start bg-teal-50 -mt-3 w-full rounded-b-xl px-2 h-full pt-4 p-4 space-y-1">
-        <span className="flex-shrink comment-text">{content}</span>
+      <div className="flex justify-between bg-teal-50 -mt-3 w-full rounded-b-xl px-2 h-full pt-4 p-4 space-x-4">
+        <div className="flex flex-col w-full">
+          {isEditing ? (
+            <div className="flex flex-col space-y-2">
+              <textarea
+                value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-teal-500 text-black"
+                rows={3}
+              />
+              <div className="flex space-x-2">
+                <button
+                  onClick={handleUpdate}
+                  className="px-3 py-1 bg-teal-600 text-white rounded-md hover:bg-teal-700"
+                >
+                  Guardar
+                </button>
+                <button
+                  onClick={() => {
+                    setIsEditing(false);
+                    setEditedContent(content); // Reset content on cancel
+                  }}
+                  className="px-3 py-1 bg-gray-300 text-black rounded-md hover:bg-gray-400"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          ) : (
+            <span className="flex-shrink comment-text">{content}</span>
+          )}
 
-        {/* VOTES */}
-        <div className="flex space-x-4 justify-center items-center">
-          <div className="flex space-x-1">
-            <VoteButton
-              voteType="upvote"
-              size={20}
-              isVoted={isUpvoted}
-              onVote={() => handleVote("upvote")}
-            />
-            <span>{upvotesState}</span>
+          {/* VOTES */}
+          <div className="flex space-x-4 justify-start items-center">
+            <div className="flex space-x-1">
+              <VoteButton
+                voteType="upvote"
+                size={20}
+                isVoted={isUpvoted}
+                onVote={() => handleVote("upvote")}
+              />
+              <span>{upvotesState}</span>
+            </div>
+            <div className="flex space-x-1">
+              <VoteButton
+                voteType="downvote"
+                size={20}
+                isVoted={isDownvoted}
+                onVote={() => handleVote("downvote")}
+              />
+              <span>{downvotesState}</span>
+            </div>
           </div>
-          <div className="flex space-x-1">
-            <VoteButton
-              voteType="downvote"
-              size={20}
-              isVoted={isDownvoted}
-              onVote={() => handleVote("downvote")}
-            />
-            <span>{downvotesState}</span>
-          </div>
+        </div>
+
+        {/* OPCIONES ACTUALIZAR/ELIMINAR */}
+        <div
+          ref={optionsMenuRef}
+          className="relative flex justify-end items-center p-2"
+          onMouseLeave={() => setIsDeleting(false)} // Reset on mouse leave
+        >
+          <PiDotsThreeCircle
+            className="cursor-pointer rounded-full hover:bg-gray-300"
+            size={30}
+            onClick={() => setIsOptionsOpen(!isOptionsOpen)}
+          />
+
+          {/* MENU OPCIONES */}
+          {isOptionsOpen && (
+            <div className="absolute right-10 mr-2 w-32 p-2 rounded-2xl shadow-lg bg-white/10 backdrop-blur-sm z-20">
+              <div
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="options-menu"
+              >
+                <button
+                  className="block w-full rounded-lg text-left px-4 py-2 font-semibold text-sm text-gray-800 opacity-80 hover:opacity-100 hover:bg-gray-100/50"
+                  role="menuitem"
+                  onClick={() => {
+                    setIsEditing(true);
+                    setIsOptionsOpen(false);
+                  }}
+                >
+                  Actualizar
+                </button>
+                <div className="border-t border-gray-400/50 my-1 mx-2"></div>
+                <button
+                  className={`block w-full rounded-lg text-left px-4 py-2 font-semibold text-sm ${
+                    isDeleting ? "text-white bg-red-500" : "text-red-700"
+                  } opacity-80 hover:opacity-100 hover:bg-red-600/50`}
+                  role="menuitem"
+                  onClick={handleDelete}
+                >
+                  {isDeleting ? "Seguro?" : "Eliminar"}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default Comment;
+export default React.memo(Comment);

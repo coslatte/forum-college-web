@@ -5,13 +5,12 @@ import type { CommentType } from "../../types";
 import type { CommentListHandle } from "../../interfaces";
 
 const CommentList = forwardRef<CommentListHandle>((_props, ref) => {
+  const PAGE_SIZE_INITIAL = 3;
+  const PAGE_SIZE_MORE = 3;
   const [comments, setComments] = useState<CommentType[]>([]);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const PAGE_SIZE_INITIAL = 10;
-  const PAGE_SIZE_MORE = 5;
+  const [loadingError, setLoadingError] = useState<string | null>(null);
 
   const fetchComments = async (
     limit: number,
@@ -27,7 +26,7 @@ const CommentList = forwardRef<CommentListHandle>((_props, ref) => {
       );
       setLoading(false);
     } catch (error) {
-      setError(
+      setLoadingError(
         (error as Error).message ||
           (error as Error).message ||
           "Error loading comments"
@@ -52,6 +51,26 @@ const CommentList = forwardRef<CommentListHandle>((_props, ref) => {
 
   useImperativeHandle(ref, () => ({ loadMore: loadMoreComments, addComment }));
 
+  const handleCommentDelete = (commentId: number) => {
+    setComments((prevComments) =>
+      prevComments.filter((comment) => comment.id !== commentId)
+    );
+  };
+
+  const handleCommentUpdate = (commentId: number, newContent: string) => {
+    setComments((prevComments) =>
+      prevComments.map((comment) =>
+        comment.id === commentId
+          ? {
+              ...comment,
+              content: newContent,
+              updated_at: new Date().toISOString(),
+            }
+          : comment
+      )
+    );
+  };
+
   const handleVoteChange = (
     commentId: number,
     _voteType: "upvote" | "downvote",
@@ -72,7 +91,7 @@ const CommentList = forwardRef<CommentListHandle>((_props, ref) => {
   };
 
   if (loading) return <div>Cargando comentarios...</div>;
-  if (error) return <div>{error}</div>;
+  if (loadingError) return <div>{loadingError}</div>;
 
   return (
     <div className="space-y-4">
@@ -95,6 +114,8 @@ const CommentList = forwardRef<CommentListHandle>((_props, ref) => {
               created_at={comment.created_at}
               updated_at={comment.updated_at}
               onVoteChange={handleVoteChange}
+              onCommentDelete={handleCommentDelete}
+              onCommentUpdate={handleCommentUpdate}
             />
           ))}
         </div>
